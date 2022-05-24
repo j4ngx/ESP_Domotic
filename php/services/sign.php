@@ -11,8 +11,10 @@ function login(){
     //Encryp the password with the sha1;
     $pass_encrypted=sha1($password);
     //The query return the id_user
-    $sql = "SELECT id_user from Users where '$username'=username and '$pass_encrypted' = password";
-    $sql_result=$con->query($sql);
+    $sql = "SELECT id_user from Users where username=:username and password=:password";
+    $sql_result=$con->prepare($sql);
+    $sql_result->execute(array(':username' => $username, ':password' => $pass_encrypted));
+
     //Count the rows of the query
     $rows=$sql_result->rowCount();
 
@@ -35,11 +37,9 @@ function login(){
 }
 
 function signup(){
-    #include 'conection.php';
-    //Get the values
-    //With the function mysqli_real_escape_string check that not is a sqli injection
-    $con = conectDatabase();
 
+    $con = conectDatabase();
+    //Get the values
     $name=$_POST['name'];
     $lastName=$_POST['lastName'];
     $email=$_POST['email'];
@@ -48,9 +48,10 @@ function signup(){
     //Encryp the password with the sha1;
     $pass_encrypted= sha1($password);
 
-    $sql_user="SELECT id_user from Users where '$user'=username";
+    $sql_user="SELECT id_user from Users where username=:username";
     //The query return the id_user
-    $result= $con->query($sql_user);
+    $result= $con->prepare($sql_user);
+    $result->execute(array(':username' => $user));
     //Count the rows of the returned query
     $rows = $result->rowCount();
 
@@ -63,9 +64,11 @@ function signup(){
 
     //If the num rows is 0 means that the username not exists in the database
     }else{
-        $sqlinsert= $con -> query("INSERT INTO Users (name,lastName,email,username,password) values ('$name','$lastName','$email','$user','$pass_encrypted')");
+        $sqlinsert= $con -> prepare("INSERT INTO Users (name,lastName,email,username,password) values (:name,:lastName,:email,:user,:password)");
+        $sqlinsert->execute(array(':name' => $name,':lastName' => $lastName,':email' => $email,':user' => $user,':password' => $pass_encrypted));
+
         //If the query was good do the scrpit in the echo
-        header("Location: ..");
+        header("Location: http://localhost:8001");
 
     }
 }

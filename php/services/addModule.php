@@ -9,7 +9,9 @@ function addLED(){
     $id_user=$_SESSION['id_user'];
     $roomName=$_POST['roomName'];
 
-    $sql_result=$con->query("INSERT INTO Leds (id_user,location,pin,roomName) values ('$id_user','$location','$pinArduino','$roomName')");
+    $sql_result=$con->prepare("INSERT INTO Leds (id_user,location,pin,roomName) values (:id_user,:location,:pin,:roomName)");
+    $sql_result->execute(array(':id_user' => $id_user, ':location' => $location, ':pin' => $pinArduino,':roomName' => $roomName));
+
     //If the result is true print a Succesfull message and date in a registry.txt
     if($sql_result != False){
         system("echo 'Led succesfully added | User: $id_user' >> registry.txt | date >> registry.txt");

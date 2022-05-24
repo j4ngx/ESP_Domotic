@@ -6,8 +6,9 @@ function addRoom(){
 
   $con = conectDatabase();
 
-  $result = $con->query("INSERT INTO Rooms (id_user,roomName) values ('$id_user','$roomName')");
-
+  $result = $con->prepare("INSERT INTO Rooms (id_user,roomName) values (:id_user,:roomName)");
+  $result->execute(array(':id_user' => $id_user,':roomName' => $roomName));
+  
   if($result != False){
       system("echo 'Room added successfully | User: $id_user' >> ../../docs/registry.txt | date >> registry.txt");
   //Else print a Error message and date in the registry.txt
