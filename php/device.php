@@ -83,10 +83,20 @@ if (!isset($_SESSION)) {
                     $location=$row->location;
                     $status=$row->status;
 
-                    echo"<p>$location</p><label class='switch'>
-                        <input type='checkbox' id='$id_led' value='$status'>
-                        <span class='slider round'></span>
-                        </label><p class ='$id_led text_id_led'>$id_led</p><br>";
+                    if($status==0){
+                        echo"<p>$location</p><label class='switch'>
+                            <input type='checkbox' id='$id_led' value='$status'>
+                            <span class='slider round'></span>
+                            </label><p class ='$id_led text_id_led'>$id_led</p><br>";
+
+
+                    }else{
+                        echo"<p>$location</p><label class='switch'>
+                            <input type='checkbox' id='$id_led' value='$status' checked>
+                            <span class='slider round'></span>
+                            </label><p class ='$id_led text_id_led'>$id_led</p><br>";
+
+                    }
 
                     echo "<script>
                         $(\"#$id_led\").change( function(){
