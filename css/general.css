@@ -1,0 +1,18 @@
+* {
+	 margin: 0;
+	 padding: 0;
+	 list-style: none;
+	 font-family: "Lato", sans-serif;
+	 line-height: 1;
+}
+ body {
+	 background-color: #002038;
+	 overflow: hidden;
+}
+.content-general{
+	margin-left: 80px;
+}
+
+p,label{
+	color: white;
+}

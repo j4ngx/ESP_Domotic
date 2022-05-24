@@ -1,0 +1,18 @@
+#content_user img {
+	width: 20em;
+	height: 20em;
+	display: inline-block;
+	margin-left: 7em;
+	margin-top: 3em;
+	background-color: white;
+	border-radius: 300px
+
+}
+
+#content_user #user_information {
+	display: inline-block;
+}
+
+#content_user p {
+	color: ;
+}
