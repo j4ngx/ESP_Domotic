@@ -65,7 +65,7 @@ function signup(){
     }else{
         $sqlinsert= $con -> query("INSERT INTO Users (name,lastName,email,username,password) values ('$name','$lastName','$email','$user','$pass_encrypted')");
         //If the query was good do the scrpit in the echo
-        header("Location: http://localhost:8001/ESP_Domotic");
+        header("Location: http://localhost:8001");
 
     }
 }
