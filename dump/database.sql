@@ -53,5 +53,6 @@ CREATE TABLE `Rooms` (
   `id_room` int NOT NULL AUTO_INCREMENT,
   `id_user` int NOT NULL,
   `roomName` varchar(100) NOT NULL,
-  PRIMARY KEY(id_room)
+  PRIMARY KEY(id_room),
+  FOREIGN KEY (id_user) REFERENCES Users(id_user)
 );
