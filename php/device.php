@@ -102,7 +102,7 @@ if (!isset($_SESSION)) {
                         $(\"#$id_led\").change( function(){
                             $.ajax({
                                 method: \"POST\",
-                                url: \"./php/services/updateValues.php\",
+                                url: \"./services/updateValues.php\",
                                 data: { text: $(\"p.$id_led\").text() }
                             });
                         });
