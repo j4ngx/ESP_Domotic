@@ -12,14 +12,22 @@ if (!isset($_SESSION)) {
 <head>
     <meta charset="UTF-8"/>
     <title>Devices</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <link rel="stylesheet" href="../css/general.css"/>
     <link rel="stylesheet" href="../css/navbar.css"/>
     <link rel="stylesheet" href="../css/devices.css"/>
     <link rel="stylesheet" href="../css/switch.css"/>
 
-    <link href="./navbar.css" rel="stylesheet/scss" type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+
 </head>
 <body>
 
@@ -49,56 +57,66 @@ if (!isset($_SESSION)) {
     <script src="../js/sideBar.js"></script>
 
 <div class="content-general">
-    <label>Do you want add a Room?</label>
-    <form action="<?php $_SERVER["PHP_SELF"];?>" method="post">
-        <label>Please introduce the name of the room</label>
-        <input type="text" name="roomName" placeholder="Room name"><br>
-        <input type="submit" name="addRoom" value="Add room">
-    </form>
-
+  <label>    </label>
     <?php
         if(isset($_POST['addRoom'])){
             addRoom();
         }
     ?>
-    <?php
+  <?php
 
         $con = conectDatabase();
 
         $id_user = $_SESSION['id_user'];
-
         $rooms = $con -> query("SELECT * from Rooms where id_user='$id_user'");
 
-        while ($room = $rooms->fetch(5)){
+       while ($room = $rooms->fetch(5)){
 
-            echo "<div class=\"room\"><span id=\"roomName\">$room->roomName</span><div class=\"content_room\">";
+          echo "<div class=\"room m-5\">";
+            echo "<div class=\"row\">";
+              echo "<p class=\"row col mt-4 ml-5 roomName\">$room->roomName</p>";
+            echo "</div>";
 
-            $result=$con->query("SELECT * from Leds where id_user = '$id_user' and roomName = '$room->roomName'");
+            echo "<div class=\"row\">";
+              echo "<p class=\"row col ml-5 devices\">Devices</p>";
+            echo "</div>";
 
-            if ($result->rowCount() != 0 ) {
+            echo "<div class=\"row mt-3 ml-5\">";
+          $result=$con->query("SELECT * from Leds where id_user = '$id_user' and roomName = '$room->roomName'");
 
-                while ($row = $result->fetch(5)){
+          if ($result->rowCount() != 0 ) {
 
-                    $id_led=$row->id_led;
-                    $location=$row->location;
-                    $status=$row->status;
+              while ($row = $result->fetch(5)){
 
-                    if($status==0){
-                        echo"<p>$location</p><label class='switch'>
-                            <input type='checkbox' id='$id_led' value='$status'>
-                            <span class='slider round'></span>
-                            </label><p class ='$id_led text_id_led'>$id_led</p><br>";
+                  $id_led=$row->id_led;
+                  $location=$row->location;
+                  $status=$row->status;
+
+                  if($status==0){
+                      echo"<div class=\"col-sm-1 d-inline\">
+                              <label class='switch'>
+                              <input type='checkbox' id='$id_led' value='$status'>
+                              <span class='slider round'></span>
+                              </label>
+                              <p class ='$id_led text_id_led'>$id_led</p>
+                              <p>$location</p>
+                            </div>";
 
 
-                    }else{
-                        echo"<p>$location</p><label class='switch'>
+
+                  }else{
+                    echo"<div class=\"col-sm-1 d-inline\">
+                            <label class='switch'>
                             <input type='checkbox' id='$id_led' value='$status' checked>
                             <span class='slider round'></span>
-                            </label><p class ='$id_led text_id_led'>$id_led</p><br>";
+                            </label>
+                            <p class ='$id_led text_id_led'>$id_led</p>
+                            <p>$location</p>
+                          </div>";
 
-                    }
+                  }
 
-                    echo "<script>
+                  echo "<script>
                         $(\"#$id_led\").change( function(){
                             $.ajax({
                                 method: \"POST\",
@@ -107,61 +125,101 @@ if (!isset($_SESSION)) {
                             });
                         });
                     </script>";
-                }
+              }
+              echo "</div>";
+          }else{
+              echo "<div class=\" d-inline\"><label id=\"empty\">This Room dont have any device yet<label></div>";
+          }
 
-            }else{
-                echo "<label id=\"empty\">This Room dont have any device yet<label>";
-            }
-
-            echo "</div></div>";
+          echo "</div></div>";
 
         }
+
     ?>
 
+    <button class="btn btn-primary m-2 d-block" type="button" data-toggle="collapse" data-target="#collapseRoom" aria-expanded="false" aria-controls="collapseRoom">
+      Do you want add a Room?
+    </button>
+    <div class="pl-xl-5 m-3" id="collapseRoom">
+      <div class="well pl-xl-5">
 
-    <label>Do you want add a led?</label>
-    <form action="<?php $_SERVER["PHP_SELF"];?>" method="post">
-        <input type="text" name="location" placeholder="Name"/><br/>
-        <label>Point to the pin where you will connect it</label>
-        <?php
-            $id_user = $_SESSION['id_user'];
+        <form action="<?php $_SERVER["PHP_SELF"];?>" method="post">
+          <div class="form-group">
+            <label>Please introduce the name of the room</label>
+            <div class="row">
+              <div class="col-sm-4">
+                <input type="text" class="form-control" id="exampleFormControlInput1" name="roomName" placeholder="Room name"><br>
+              </div>
+              <div class="col">
+                <input type="submit" class="btn btn-success" name="addRoom" value="Add room">
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
 
-            echo "<select name=\"pinArduino\">";
+    <button class="btn btn-primary m-2" type="button" data-toggle="collapse" data-target="#collapseLed" aria-expanded="false" aria-controls="collapseLed">
+      Do you want add a Led?
+    </button>
+    <div class="pl-xl-5 m-3" id="collapseLed">
+      <div class="well pl-xl-5 ">
+        <form action="<?php $_SERVER["PHP_SELF"];?>" method="post">
+          <div class="form-row">
+            <div class="form-group col-md-2">
+              <label>Dispositive name</label>
+              <input type="text" name="location" class="form-control" placeholder="Name"/><br/>
+            </div>
+            <div class="form-group col">
+              <label for="inputPinArduino" class="d-block">Arduino pin</label>
+              <select name="pinArduino" class="form-control  col-sm-1" id="inputPinArduino">
+              <?php
+                $id_user = $_SESSION['id_user'];
 
-            $pins = $con->query("SELECT pin from Leds");
+                $pins = $con->query("SELECT pin from Leds");
 
-            $used_pin[]=NULL;
+                $used_pin[]=NULL;
 
-            if ($pins->rowCount()!=0) {
-                while($pin = $pins->fetch(5)){
-                    $used_pin[]=$pin->pin;
+                if ($pins->rowCount()!=0) {
+                    while($pin = $pins->fetch(5)){
+                        $used_pin[]=$pin->pin;
+                    }
                 }
-            }
 
-            for ($i=1; $i <= 54; $i++) {
-                if (!in_array($i, $used_pin)) {
-                    echo "<option value=\"$i\">$i</option>";
+                for ($i=1; $i <= 54; $i++) {
+                    if (!in_array($i, $used_pin)) {
+                        echo "<option value=\"$i\">$i</option>";
+                    }
                 }
-            }
+                ?>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-2">
+                  <label for="inputRoomName">Choose a room</label>
+                  <select class="form-control col-md-8" name="roomName" id="inputRoomName">
+                  <?php
+                    $rooms = $con -> query("SELECT * from Rooms where id_user='$id_user'");
 
-            echo "</select>";
-            echo "<select name=\"roomName\">";
-
-            $rooms = $con -> query("SELECT * from Rooms where id_user='$id_user'");
-
-            while ($room = $rooms->fetch(5)){
-                 echo "<option value=\"$room->roomName\">$room->roomName</option>";
-
-            }
-        ?>
-        </select><br>
-        <input type="submit" name="addLed" value="Add Led"/>
-        <?php
-        if(isset($_POST['addLed'])){
-            addLED();
-        }
-        ?>
-    </form>
+                    while ($room = $rooms->fetch(5)){
+                         echo "<option value=\"$room->roomName\">$room->roomName</option>";
+                    }
+                  ?>
+                </select>
+              </div>
+                <div class="form-group col">
+                  <input  type="submit" class="btn btn-success mt-4" name="addLed" value="Add Led"/>
+                </div>
+            </div>
+      </div>
+    </div>
+    <?php
+    if(isset($_POST['addLed'])){
+        addLED();
+    }
+    ?>
+    
 
 </div>
 </body>
