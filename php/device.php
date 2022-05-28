@@ -20,9 +20,6 @@ if (!isset($_SESSION)) {
     <link rel="stylesheet" href="../css/devices.css"/>
     <link rel="stylesheet" href="../css/switch.css"/>
 
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
@@ -58,17 +55,16 @@ if (!isset($_SESSION)) {
 
 <div class="content-general">
   <label>    </label>
-    <?php
-        if(isset($_POST['addRoom'])){
-            addRoom();
-        }
-    ?>
+  <h1>Rooms</h1>
+  <div class="justify-center-md-center">
+
   <?php
 
         $con = conectDatabase();
 
         $id_user = $_SESSION['id_user'];
         $rooms = $con -> query("SELECT * from Rooms where id_user='$id_user'");
+
 
        while ($room = $rooms->fetch(5)){
 
@@ -82,7 +78,7 @@ if (!isset($_SESSION)) {
             echo "</div>";
 
             echo "<div class=\"row mt-3 ml-5\">";
-          $result=$con->query("SELECT * from Leds where id_user = '$id_user' and roomName = '$room->roomName'");
+            $result=$con->query("SELECT * from Leds where id_user = '$id_user' and roomName = '$room->roomName'");
 
           if ($result->rowCount() != 0 ) {
 
@@ -126,7 +122,6 @@ if (!isset($_SESSION)) {
                         });
                     </script>";
               }
-              echo "</div>";
           }else{
               echo "<div class=\" d-inline\"><label id=\"empty\">This Room dont have any device yet<label></div>";
           }
@@ -214,13 +209,18 @@ if (!isset($_SESSION)) {
             </div>
       </div>
     </div>
-    <?php
-    if(isset($_POST['addLed'])){
-        addLED();
-    }
-    ?>
-    
 
-</div>
+        <?php
+        if(isset($_POST['addLed'])){
+            addLED();
+        }
+
+        if(isset($_POST['addRoom'])){
+            addRoom();
+        }
+        ?>
+      </div>
+
+    </div>
 </body>
 </html>
