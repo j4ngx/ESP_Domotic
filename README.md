@@ -1,6 +1,6 @@
 # ESP_Domotic
 
-![](./image/logo.png)
+![](./images/logo.png)
 
 ## Install
 
