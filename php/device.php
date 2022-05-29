@@ -19,6 +19,7 @@ if (!isset($_SESSION)) {
     <link rel="stylesheet" href="../css/navbar.css"/>
     <link rel="stylesheet" href="../css/devices.css"/>
     <link rel="stylesheet" href="../css/switch.css"/>
+    <link rel="stylesheet" href="../css/blind.css"/>
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -55,7 +56,7 @@ if (!isset($_SESSION)) {
 
 <div class="content-general">
   <label>    </label>
-  <h1>Rooms</h1>
+  <h1 class="text-white ml-3 mt-2">Rooms</h1>
   <div class="justify-center-md-center">
 
   <?php
@@ -70,17 +71,38 @@ if (!isset($_SESSION)) {
 
           echo "<div class=\"room m-5\">";
             echo "<div class=\"row\">";
-              echo "<p class=\"row col mt-4 ml-5 roomName\">$room->roomName</p>";
+              echo "<p class=\"row col-10 mt-4 ml-5 roomName\">$room->roomName</p>";
+              echo "<li class='list-item mt-1 ml-5 pl-4'>";
+                echo "<button id='room_$room->id_room' class=\"btn btn-danger btn-sm rounded-circle ml-5\" type=\"button\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\"><i class=\"fa fa-trash\"></i></button>";
+              echo "</li>";
+              echo "<spam class ='room_$room->id_room text_id_led'>$room->id_room</spam>";
+              echo "<script>
+                      $( \"#room_$room->id_room\" ).click(function(){
+                          $.ajax({
+                              method: \"POST\",
+                              url: \"./services/deleteRoom.php\",
+                              data: { text: $(\"spam.room_$room->id_room\").text() }
+                          }).done(function(){
+                            location.reload(true);
+                          });
+
+                      });
+                    </script>";
+
+
             echo "</div>";
 
             echo "<div class=\"row\">";
               echo "<p class=\"row col ml-5 devices\">Devices</p>";
             echo "</div>";
 
-            echo "<div class=\"row mt-3 ml-5\">";
-            $result=$con->query("SELECT * from Leds where id_user = '$id_user' and roomName = '$room->roomName'");
+            $result=$con->query("SELECT * from Leds where id_user = '$id_user' and roomName = '$room->roomName' UNION SELECT * from Blinds where id_user = '$id_user' and roomName = '$room->roomName'");
 
-          if ($result->rowCount() != 0 ) {
+            if ($result->rowCount() != 0 ) {
+
+              // Show all leds
+              echo "<div class=\"row mt-3 ml-5\">";
+              $result=$con->query("SELECT * from Leds where id_user = '$id_user' and roomName = '$room->roomName'");
 
               while ($row = $result->fetch(5)){
 
@@ -88,45 +110,98 @@ if (!isset($_SESSION)) {
                   $location=$row->location;
                   $status=$row->status;
 
-                  if($status==0){
+
                       echo"<div class=\"col-sm-1 d-inline\">
-                              <label class='switch'>
-                              <input type='checkbox' id='$id_led' value='$status'>
-                              <span class='slider round'></span>
+                              <label class='switch'>";
+                      if($status==0){
+                            echo "<input type='checkbox' id='$id_led' value='$status'>";
+                      }else{
+                            echo "<input type='checkbox' id='$id_led' value='$status' checked>";
+                      }
+                      echo "<span class='slider round'></span>
                               </label>
                               <p class ='$id_led text_id_led'>$id_led</p>
-                              <p>$location</p>
-                            </div>";
+                              <p>$location</p>";
+                        echo "<li class='list-item'>";
+                          echo "<button id='led_$id_led' class=\"btn btn-danger btn-sm rounded-circle ml-3 mb-2\" type=\"button\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\"><i class=\"fa fa-trash\"></i></button>";
+                        echo "</li>";
+                        echo "<script>
+                                $( \"#led_$id_led\" ).click(function(){
+                                    $.ajax({
+                                        method: \"POST\",
+                                        url: \"./services/deleteLed.php\",
+                                        data: { text: $(\"p.$id_led\").text() }
+                                    }).done(function(){
+                                      location.reload(true);
+                                    });
+
+                                });
+                              </script>";
+                        echo "<script>
+                              $(\"#$id_led\").change( function(){
+                                  $.ajax({
+                                      method: \"POST\",
+                                      url: \"./services/updateValuesLed.php\",
+                                      data: { text: $(\"p.$id_led\").text() }
+                                  });
+                              });
+                          </script>";
 
 
+                  echo "</div>";
 
-                  }else{
-                    echo"<div class=\"col-sm-1 d-inline\">
-                            <label class='switch'>
-                            <input type='checkbox' id='$id_led' value='$status' checked>
-                            <span class='slider round'></span>
-                            </label>
-                            <p class ='$id_led text_id_led'>$id_led</p>
-                            <p>$location</p>
-                          </div>";
+              }
+              echo "</div>";
+              //Show all the Blinds
+              $result=$con->query("SELECT * from Blinds where id_user = '$id_user' and roomName = '$room->roomName'");
+              while ($row = $result->fetch(5)){
 
-                  }
+                  $id_blind=$row->id_blind;
+                  $location=$row->location;
+                  $percentage=$row->percentage;
+
+                  echo "<div class=\"row mt-3 ml-5\">
+                    <div class=\"col slidecontainer mb-5\">
+                      <input type=\"range\" min=\"1\" max=\"100\" value=\"$percentage\" class=\"range\" id=\"blind_$id_blind\">
+                      <label class=\"row ml-5 pl-5 mt-3 \">$location</label>
+                      <p class ='blind_$id_blind text_id_led'>$id_blind</p>
+                      <li class='list-item '>
+                        <button id='delete_blind_$id_blind' class=\"btn btn-danger btn-sm rounded-circle \" type=\"button\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\"><i class=\"fa fa-trash\"></i></button>
+                      </li>
+                    </div>
+                  </div>";
 
                   echo "<script>
-                        $(\"#$id_led\").change( function(){
-                            $.ajax({
-                                method: \"POST\",
-                                url: \"./services/updateValues.php\",
-                                data: { text: $(\"p.$id_led\").text() }
-                            });
-                        });
-                    </script>";
+                          $(\"#blind_$id_blind\").change( function(){
+                              $.ajax({
+                                  method: \"POST\",
+                                  url: \"./services/updateValuesBlind.php\",
+                                  data: { text: $(\"p.blind_$id_blind\").text(),
+                                          rangeValue: $(\"#blind_$id_blind\").val()
+                                   }
+                              });
+                            alet($(\"#rangeValue\").val());
+                          });
+                  </script>";
+
+                  echo "<script>
+                          $( \"#delete_blind_$id_blind\" ).click(function(){
+                              $.ajax({
+                                  method: \"POST\",
+                                  url: \"./services/deleteBlind.php\",
+                                  data: { text: $(\"p.blind_$id_blind\").text() }
+                              }).done(function(){
+                                location.reload(true);
+                              });
+                          });
+                        </script>";
               }
+
           }else{
-              echo "<div class=\" d-inline\"><label id=\"empty\">This Room dont have any device yet<label></div>";
+              echo "<div class=\"row d-inline m-5 p-5\"><label id=\"empty\">This Room dont have any device yet<label></div>";
           }
 
-          echo "</div></div>";
+          echo "</div>";
 
         }
 
@@ -143,7 +218,7 @@ if (!isset($_SESSION)) {
             <label>Please introduce the name of the room</label>
             <div class="row">
               <div class="col-sm-4">
-                <input type="text" class="form-control" id="exampleFormControlInput1" name="roomName" placeholder="Room name"><br>
+                <input type="text" class="form-control" id="exampleFormControlInput1" name="roomName" placeholder="Room name" required><br>
               </div>
               <div class="col">
                 <input type="submit" class="btn btn-success" name="addRoom" value="Add room">
@@ -155,7 +230,7 @@ if (!isset($_SESSION)) {
     </div>
 
     <button class="btn btn-primary m-2" type="button" data-toggle="collapse" data-target="#collapseLed" aria-expanded="false" aria-controls="collapseLed">
-      Do you want add a Led?
+      Do you want add a Device?
     </button>
     <div class="pl-xl-5 m-3" id="collapseLed">
       <div class="well pl-xl-5 ">
@@ -163,7 +238,7 @@ if (!isset($_SESSION)) {
           <div class="form-row">
             <div class="form-group col-md-2">
               <label>Dispositive name</label>
-              <input type="text" name="location" class="form-control" placeholder="Name"/><br/>
+              <input type="text" name="location" class="form-control" placeholder="Name" required/><br/>
             </div>
             <div class="form-group col">
               <label for="inputPinArduino" class="d-block">Arduino pin</label>
@@ -171,7 +246,7 @@ if (!isset($_SESSION)) {
               <?php
                 $id_user = $_SESSION['id_user'];
 
-                $pins = $con->query("SELECT pin from Leds");
+                $pins = $con->query("(SELECT pin FROM Leds) UNION (SELECT pin FROM Blinds)");
 
                 $used_pin[]=NULL;
 
@@ -203,24 +278,43 @@ if (!isset($_SESSION)) {
                   ?>
                 </select>
               </div>
-                <div class="form-group col">
-                  <input  type="submit" class="btn btn-success mt-4" name="addLed" value="Add Led"/>
-                </div>
+
+              <div class="form-group col-md-2">
+                  <label for="inputRoomName">Type device</label>
+                  <select class="form-control col-md-8" name="type_device" id="inputTypeDevice">
+                    <option value="led">Led</option>
+                    <option value="blind">Blind</option>
+                    <option value="led_rgb" disabled>Led RGB</option>
+                </select>
+              </div>
+
+
+            <div class="form-row">
+              <div class="form-group col">
+                <input  type="submit" class="btn btn-success mt-4" name="addDevice" value="Add device"/>
+              </div>
             </div>
       </div>
     </div>
 
-        <?php
-        if(isset($_POST['addLed'])){
-            addLED();
-        }
 
+
+        <?php
         if(isset($_POST['addRoom'])){
             addRoom();
         }
-        ?>
-      </div>
 
-    </div>
+        if (isset($_POST['addDevice'])) {
+          if($_POST['type_device']=="led"){
+              addLED();
+          }elseif ($_POST['type_device']=="blind") {
+              addBlind();
+          }
+        }
+
+        ?>
+  </div>
+</div>
+</div>
 </body>
 </html>

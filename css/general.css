@@ -7,12 +7,18 @@
 }
  body {
 	 background-color: #002038;
-	 overflow: hidden;
+	 
 }
 .content-general{
 	margin-left: 80px;
+	height: 100%;
 }
 
 p,label{
 	color: white;
+}
+
+.roomName{
+	font-size: x-large;
+	font-weight: bold;
 }

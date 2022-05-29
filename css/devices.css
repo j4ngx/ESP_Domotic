@@ -2,11 +2,8 @@ body{
 	overflow: visible;
 }
 .room{
-	margin-left: 80px;
-	margin-top: 30px;
-	margin-right: 70px;
-	display: flex;
-	justify-content: center;
+
+	width: 70%;
 
 	background: rgba(255, 255, 255, 0.52);
 	border-radius: 16px;
@@ -16,11 +13,14 @@ body{
 
 }
 
-#roomName{
-	margin: 20px;
-	margin-top: 50px;
-	display: flex;
-	justify-content: center;
+.devices{
+	font-size: medium;
+	font-weight: bold;
+}
+
+.roomName{
+	font-size: x-large;
+	font-weight: bold;
 }
 
 #empty{
