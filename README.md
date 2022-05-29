@@ -1,6 +1,6 @@
 # ESP_Domotic
 
-## Instalation
+## Install
 
 To run this application you will need **Docker** and **Docker-compose**.
 
