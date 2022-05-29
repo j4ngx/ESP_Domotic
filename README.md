@@ -1,5 +1,7 @@
 # ESP_Domotic
 
+![](./image/logo.png)
+
 ## Install
 
 To run this application you will need **Docker** and **Docker-compose**.
