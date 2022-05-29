@@ -68,7 +68,7 @@ function signup(){
         $sqlinsert->execute(array(':name' => $name,':lastName' => $lastName,':email' => $email,':user' => $user,':password' => $pass_encrypted));
 
         //If the query was good do the scrpit in the echo
-        header("Location: ../../index,php");
+        header("Location: ../../index.php");
 
     }
 }
