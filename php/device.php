@@ -73,7 +73,10 @@ if (!isset($_SESSION)) {
             echo "<div class=\"row\">";
               echo "<p class=\"row col-10 mt-4 ml-5 roomName\">$room->roomName</p>";
               echo "<li class='list-item mt-1 ml-5 pl-4'>";
-                echo "<button id='room_$room->id_room' class=\"btn btn-danger btn-sm rounded-circle ml-5\" type=\"button\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\"><i class=\"fa fa-trash\"></i></button>";
+                echo "<button id='room_$room->id_room' class=\"btn btn-danger btn-sm rounded-circle ml-5\"
+                 type=\"button\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\">
+                          <i class=\"fa fa-trash\"></i>
+                      </button>";
               echo "</li>";
               echo "<spam class ='room_$room->id_room text_id_led'>$room->id_room</spam>";
               echo "<script>
@@ -96,7 +99,8 @@ if (!isset($_SESSION)) {
               echo "<p class=\"row col ml-5 devices\">Devices</p>";
             echo "</div>";
 
-            $result=$con->query("SELECT * from Leds where id_user = '$id_user' and roomName = '$room->roomName' UNION SELECT * from Blinds where id_user = '$id_user' and roomName = '$room->roomName'");
+            $result=$con->query("SELECT * from Leds where id_user = '$id_user' and roomName = '$room->roomName' UNION
+                                 SELECT * from Blinds where id_user = '$id_user' and roomName = '$room->roomName'");
 
             if ($result->rowCount() != 0 ) {
 
@@ -110,7 +114,6 @@ if (!isset($_SESSION)) {
                   $location=$row->location;
                   $status=$row->status;
 
-
                       echo"<div class=\"col-sm-1 d-inline\">
                               <label class='switch'>";
                       if($status==0){
@@ -123,7 +126,11 @@ if (!isset($_SESSION)) {
                               <p class ='$id_led text_id_led'>$id_led</p>
                               <p>$location</p>";
                         echo "<li class='list-item'>";
-                          echo "<button id='led_$id_led' class=\"btn btn-danger btn-sm rounded-circle ml-3 mb-2\" type=\"button\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\"><i class=\"fa fa-trash\"></i></button>";
+                          echo "<button id='led_$id_led' class=\"btn btn-danger btn-sm rounded-circle ml-3 mb-2\"
+                                        type=\"button\" data-toggle=\"tooltip\" data-placement=\"top\"
+                                        title=\"Delete\">
+                                        <i class=\"fa fa-trash\"></i>
+                                </button>";
                         echo "</li>";
                         echo "<script>
                                 $( \"#led_$id_led\" ).click(function(){

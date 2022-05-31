@@ -2,13 +2,9 @@
 include 'conection.php';
 
 $id_led = $_POST['text'];
-#var_dump($_POST);
-var_dump($_POST['text']);
-
 $con = conectDatabase();
 
 $query = $con->query("SELECT * from Leds where id_led = '$id_led'");
-
 $led = $query->fetch(5);
 
 if($led->status == "1"){

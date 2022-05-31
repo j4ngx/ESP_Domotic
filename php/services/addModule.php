@@ -14,10 +14,10 @@ function addLED(){
 
     //If the result is true print a Succesfull message and date in a registry.txt
     if($sql_result != False){
-        system("echo 'Led succesfully added | User: $id_user' >> registry.txt | date >> registry.txt");
+        system("echo 'Led succesfully added | User: $id_user' >> ../docs/registry.txt | date >> ../docs/registry.txt");
     //Else print a Error message and date in the registry.txt
     }else{
-        system("echo 'Error adding led to database | User: $id_user' >> registry.txt | date >> registry.txt");
+        system("echo 'Error adding led to database | User: $id_user' >> ../docs/registry.txt | date >> ../docs/registry.txt");
     }
 
     echo "<script>window.location = window.location.href.split(\"#\")[0];</script>";
@@ -36,10 +36,10 @@ function addBlind(){
 
     //If the result is true print a Succesfull message and date in a registry.txt
     if($sql_result != False){
-        system("echo 'Blind succesfully added | User: $id_user' >> registry.txt | date >> registry.txt");
+        system("echo 'Blind succesfully added | User: $id_user' >> ../docs/registry.txt | date >> ../docs/registry.txt");
     //Else print a Error message and date in the registry.txt
     }else{
-        system("echo 'Error adding Blind to database | User: $id_user' >> registry.txt | date >> registry.txt");
+        system("echo 'Error adding Blind to database | User: $id_user' >> ../docs/registry.txt | date >> ../docs/registry.txt");
     }
 
     echo "<script>window.location = window.location.href.split(\"#\")[0];</script>";

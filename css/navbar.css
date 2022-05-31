@@ -5,7 +5,7 @@
 	 width: 80px;
 	 background-color: #313443;
 	 float: left;
-   
+   z-index: 2;
 }
  .sidebar-navigation ul {
 	 text-align: center;
